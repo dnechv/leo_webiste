@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo Pizza - Order Online</title>
+    <style>
+        /* CSS Variables for easy theming */
+        :root {
+            --primary-color: #e63946;
+            --primary-dark: #d62839;
+            --secondary-color: #f1faee;
+            --accent-color: #457b9d;
+            --text-dark: #1d3557;
+            --text-light: #6c757d;
+            --bg-light: #ffffff;
+            --bg-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+
+        /* Modern Font Stack */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-gray);
+            line-height: 1.6;
+            padding-top: 80px; /* Space for fixed header */
+        }
+
+        /* Fixed Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-light);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            padding: var(--spacing-sm) var(--spacing-lg);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cart-button {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            transition: transform 0.2s;
+        }
+
+        .cart-button:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .cart-badge.hidden {
+            display: none;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            background-color: var(--bg-light);
+            border-bottom: 2px solid var(--border-color);
+            padding: 0 var(--spacing-lg);
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+        }
+
+        .tab-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: var(--text-dark);
+        }
+
+        .tab-button[aria-selected="true"] {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-lg);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+        }
+
+        /* Menu Card */
+        .menu-card {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .menu-card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        /* TODO: Replace with actual images */
+        /* Example: <img src="path/to/image.jpg" alt="Item name" class="menu-card-image"> */
+
+        .menu-card-content {
+            padding: var(--spacing-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-dark);
+        }
+
+        .menu-card-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-md);
+            flex-grow: 1;
+        }
+
+        .menu-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .menu-card-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .add-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .add-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .add-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Cart Drawer */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            background-color: var(--bg-light);
+            box-shadow: var(--shadow-lg);
+            z-index: 2001;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-drawer-header {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-drawer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cart-close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: var(--spacing-xs);
+        }
+
+        .cart-drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-md);
+        }
+
+        .cart-item {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .cart-item-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .cart-item-quantity {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .cart-drawer-footer {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-gray);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .cart-total-label {
+            color: var(--text-dark);
+        }
+
+        .cart-total-amount {
+            color: var(--primary-color);
+        }
+
+        .checkout-button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .checkout-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-light);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            header {
+                padding: var(--spacing-xs) var(--spacing-md);
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .tab-navigation {
+                top: 50px;
+                padding: 0 var(--spacing-md);
+            }
+
+            .tab-container {
+                gap: 0;
+            }
+
+            .tab-button {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: var(--spacing-md);
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .cart-drawer {
+                width: 100%;
+                max-width: 100vw;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">🍕 Leo Pizza</div>
+            <button class="cart-button" aria-label="Open cart" id="cartButton">
+                🛒
+                <span class="cart-badge hidden" id="cartBadge">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation" role="tablist">
+        <div class="tab-container">
+            <button class="tab-button" role="tab" aria-selected="true" aria-controls="pizza-panel" id="pizza-tab" data-category="pizza">
+                Pizza
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="burgers-panel" id="burgers-tab" data-category="burgers">
+                Burgers
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="drinks-panel" id="drinks-tab" data-category="drinks">
+                Drinks
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div id="menu-container" role="tabpanel" aria-labelledby="pizza-tab">
+            <!-- Menu items will be rendered here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+        <div class="cart-drawer-header">
+            <h2 class="cart-drawer-title">Your Cart</h2>
+            <button class="cart-close-button" aria-label="Close cart" id="cartCloseButton">×</button>
+        </div>
+        <div class="cart-drawer-content" id="cartContent">
+            <!-- Cart items will be rendered here by JavaScript -->
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-total">
+                <span class="cart-total-label">Total:</span>
+                <span class="cart-total-amount" id="cartTotal">$0.00</span>
+            </div>
+            <!-- TODO: Connect checkout button to order submission endpoint -->
+            <button class="checkout-button" id="checkoutButton">Checkout</button>
+        </div>
+    </aside>
+
+    <script>
+        // Menu Dataset
+        // TODO: Replace with data from API or database
+        const menuData = {
+            pizza: [
+                {
+                    id: 'pizza-1',
+                    name: 'Margherita',
+                    description: 'Classic tomato sauce, fresh mozzarella, and basil',
+                    price: 12.99,
+                    image: '🍕' // TODO: Replace with actual image URL
+                },
+                {
+                    id: 'pizza-2',
+                    name: 'Pepperoni',
+                    description: 'Tomato sauce, mozzarella, and spicy pepperoni',
+                    price: 14.99,
+                    image: '🍕'
+                },
+                {
+                    id: 'pizza-3',
+                    name: 'Hawaiian',
+                    description: 'Tomato sauce, mozzarella, ham, and pineapple',
+                    price: 15.99,
+                    image: '🍕'
+                },
+                {
+                    id: 'pizza-4',
+                    name: 'BBQ Chicken',
+                    description: 'BBQ sauce, mozzarella, grilled chicken, and red onions',
+                    price: 16.99,
+                    image: '🍕'
+                },
+                {
+                    id: 'pizza-5',
+                    name: 'Vegetarian',
+                    description: 'Tomato sauce, mozzarella, bell peppers, mushrooms, and olives',
+                    price: 14.99,
+                    image: '🍕'
+                },
+                {
+                    id: 'pizza-6',
+                    name: 'Supreme',
+                    description: 'Tomato sauce, mozzarella, pepperoni, sausage, peppers, and onions',
+                    price: 17.99,
+                    image: '🍕'
+                }
+            ],
+            burgers: [
+                {
+                    id: 'burger-1',
+                    name: 'Classic Burger',
+                    description: 'Beef patty, lettuce, tomato, onion, and special sauce',
+                    price: 9.99,
+                    image: '🍔'
+                },
+                {
+                    id: 'burger-2',
+                    name: 'Cheeseburger',
+                    description: 'Beef patty, cheese, lettuce, tomato, and pickles',
+                    price: 10.99,
+                    image: '🍔'
+                },
+                {
+                    id: 'burger-3',
+                    name: 'Bacon Burger',
+                    description: 'Beef patty, crispy bacon, cheese, lettuce, and mayo',
+                    price: 12.99,
+                    image: '🍔'
+                },
+                {
+                    id: 'burger-4',
+                    name: 'Veggie Burger',
+                    description: 'Plant-based patty, lettuce, tomato, and avocado',
+                    price: 11.99,
+                    image: '🍔'
+                }
+            ],
+            drinks: [
+                {
+                    id: 'drink-1',
+                    name: 'Cola',
+                    description: 'Refreshing cola drink',
+                    price: 2.99,
+                    image: '🥤'
+                },
+                {
+                    id: 'drink-2',
+                    name: 'Lemonade',
+                    description: 'Fresh squeezed lemonade',
+                    price: 3.49,
+                    image: '🥤'
+                },
+                {
+                    id: 'drink-3',
+                    name: 'Iced Tea',
+                    description: 'Sweet iced tea',
+                    price: 2.99,
+                    image: '🥤'
+                },
+                {
+                    id: 'drink-4',
+                    name: 'Orange Juice',
+                    description: 'Fresh orange juice',
+                    price: 3.99,
+                    image: '🥤'
+                }
+            ]
+        };
+
+        // Cart State
+        let cart = []; // Array of { item, quantity }
+
+        // DOM Elements
+        const menuContainer = document.getElementById('menu-container');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const cartButton = document.getElementById('cartButton');
+        const cartBadge = document.getElementById('cartBadge');
+        const cartDrawer = document.getElementById('cartDrawer');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartCloseButton = document.getElementById('cartCloseButton');
+        const cartContent = document.getElementById('cartContent');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutButton = document.getElementById('checkoutButton');
+
+        // Initialize
+        let currentCategory = 'pizza';
+        renderCategory(currentCategory);
+
+        // Tab Switching
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+                
+                // Update tab states
+                tabButtons.forEach(btn => {
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                button.setAttribute('aria-selected', 'true');
+                
+                // Update content
+                currentCategory = category;
+                renderCategory(category);
+            });
+        });
+
+        /**
+         * Renders menu items for a given category
+         * @param {string} category - The category to render ('pizza', 'burgers', or 'drinks')
+         */
+        function renderCategory(category) {
+            const items = menuData[category] || [];
+            
+            menuContainer.innerHTML = items.map(item => `
+                <div class="menu-card">
+                    <div class="menu-card-image">
+                        ${item.image}
+                        <!-- TODO: Replace emoji with actual image:
+                        <img src="${item.image}" alt="${item.name}" />
+                        -->
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">${item.name}</h3>
+                        <p class="menu-card-description">${item.description}</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">$${item.price.toFixed(2)}</span>
+                            <button class="add-button" data-item-id="${item.id}" aria-label="Add ${item.name} to cart">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Attach event listeners to Add buttons
+            document.querySelectorAll('.add-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = e.target.getAttribute('data-item-id');
+                    addToCart(itemId);
+                });
+            });
+        }
+
+        /**
+         * Adds an item to the cart
+         * @param {string} itemId - The ID of the item to add
+         */
+        function addToCart(itemId) {
+            // Find item in all categories
+            let item = null;
+            for (const category in menuData) {
+                item = menuData[category].find(i => i.id === itemId);
+                if (item) break;
+            }
+
+            if (!item) return;
+
+            // Check if item already in cart
+            const existingItem = cart.find(cartItem => cartItem.item.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ item, quantity: 1 });
+            }
+
+            updateCartUI();
+        }
+
+        /**
+         * Removes an item from the cart
+         * @param {string} itemId - The ID of the item to remove
+         */
+        function removeFromCart(itemId) {
+            cart = cart.filter(cartItem => cartItem.item.id !== itemId);
+            updateCartUI();
+        }
+
+        /**
+         * Updates the quantity of an item in the cart
+         * @param {string} itemId - The ID of the item
+         * @param {number} quantity - The new quantity
+         */
+        function updateCartQuantity(itemId, quantity) {
+            const cartItem = cart.find(cartItem => cartItem.item.id === itemId);
+            if (cartItem) {
+                if (quantity <= 0) {
+                    removeFromCart(itemId);
+                } else {
+                    cartItem.quantity = quantity;
+                }
+            }
+            updateCartUI();
+        }
+
+        /**
+         * Renders the cart drawer content
+         */
+        function renderCart() {
+            if (cart.length === 0) {
+                cartContent.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                return;
+            }
+
+            cartContent.innerHTML = cart.map(cartItem => {
+                const { item, quantity } = cartItem;
+                const total = item.price * quantity;
+                
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">$${total.toFixed(2)}</div>
+                            <div class="cart-item-quantity">Qty: ${quantity} × $${item.price.toFixed(2)}</div>
+                        </div>
+                        <div>
+                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity - 1})" aria-label="Decrease quantity">−</button>
+                            <span style="margin: 0 0.5rem; font-weight: 600;">${quantity}</span>
+                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity + 1})" aria-label="Increase quantity">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Calculate total
+            const total = cart.reduce((sum, cartItem) => {
+                return sum + (cartItem.item.price * cartItem.quantity);
+            }, 0);
+            
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        /**
+         * Updates all cart-related UI elements
+         */
+        function updateCartUI() {
+            // Update badge
+            const totalItems = cart.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+            
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+
+            // Update cart content
+            renderCart();
+        }
+
+        // Make updateCartQuantity available globally for inline onclick handlers
+        window.updateCartQuantity = updateCartQuantity;
+
+        // Cart Drawer Toggle
+        cartButton.addEventListener('click', () => {
+            cartDrawer.classList.add('active');
+            cartOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+
+        function closeCart() {
+            cartDrawer.classList.remove('active');
+            cartOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        cartCloseButton.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+
+        // Checkout Button
+        // TODO: Connect to order submission endpoint
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+            
+            // Placeholder for checkout functionality
+            alert(`Order total: $${cartTotal.textContent.replace('$', '')}\n\nTODO: Connect to payment/order submission API`);
+        });
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && cartDrawer.classList.contains('active')) {
+                closeCart();
+            }
+        });
+    </script>
+</body>
+</html>
