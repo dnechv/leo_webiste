@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo Pizza - Order Online</title>
+    <title>Leo Pizza - Заказ пиццы онлайн</title>
     <style>
         /* CSS Variables for easy theming */
         :root {
@@ -445,7 +445,7 @@
     <header>
         <div class="header-content">
             <div class="logo">🍕 Leo Pizza</div>
-            <button class="cart-button" aria-label="Open cart" id="cartButton">
+            <button class="cart-button" aria-label="Открыть корзину" id="cartButton">
                 🛒
                 <span class="cart-badge hidden" id="cartBadge">0</span>
             </button>
@@ -456,13 +456,13 @@
     <nav class="tab-navigation" role="tablist">
         <div class="tab-container">
             <button class="tab-button" role="tab" aria-selected="true" aria-controls="pizza-panel" id="pizza-tab" data-category="pizza">
-                Pizza
+                Пицца
             </button>
             <button class="tab-button" role="tab" aria-selected="false" aria-controls="burgers-panel" id="burgers-tab" data-category="burgers">
-                Burgers
+                Бургеры
             </button>
             <button class="tab-button" role="tab" aria-selected="false" aria-controls="drinks-panel" id="drinks-tab" data-category="drinks">
-                Drinks
+                Напитки
             </button>
         </div>
     </nav>
@@ -476,21 +476,21 @@
 
     <!-- Cart Drawer -->
     <div class="cart-overlay" id="cartOverlay"></div>
-    <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Корзина покупок">
         <div class="cart-drawer-header">
-            <h2 class="cart-drawer-title">Your Cart</h2>
-            <button class="cart-close-button" aria-label="Close cart" id="cartCloseButton">×</button>
+            <h2 class="cart-drawer-title">Ваша корзина</h2>
+            <button class="cart-close-button" aria-label="Закрыть корзину" id="cartCloseButton">×</button>
         </div>
         <div class="cart-drawer-content" id="cartContent">
             <!-- Cart items will be rendered here by JavaScript -->
         </div>
         <div class="cart-drawer-footer">
             <div class="cart-total">
-                <span class="cart-total-label">Total:</span>
+                <span class="cart-total-label">Итого:</span>
                 <span class="cart-total-amount" id="cartTotal">$0.00</span>
             </div>
             <!-- TODO: Connect checkout button to order submission endpoint -->
-            <button class="checkout-button" id="checkoutButton">Checkout</button>
+            <button class="checkout-button" id="checkoutButton">Оформить заказ</button>
         </div>
     </aside>
 
@@ -501,43 +501,43 @@
             pizza: [
                 {
                     id: 'pizza-1',
-                    name: 'Margherita',
-                    description: 'Classic tomato sauce, fresh mozzarella, and basil',
+                    name: 'Маргарита',
+                    description: 'Классический томатный соус, свежая моцарелла и базилик',
                     price: 12.99,
                     image: '🍕' // TODO: Replace with actual image URL
                 },
                 {
                     id: 'pizza-2',
-                    name: 'Pepperoni',
-                    description: 'Tomato sauce, mozzarella, and spicy pepperoni',
+                    name: 'Пепперони',
+                    description: 'Томатный соус, моцарелла и острая пепперони',
                     price: 14.99,
                     image: '🍕'
                 },
                 {
                     id: 'pizza-3',
-                    name: 'Hawaiian',
-                    description: 'Tomato sauce, mozzarella, ham, and pineapple',
+                    name: 'Гавайская',
+                    description: 'Томатный соус, моцарелла, ветчина и ананасы',
                     price: 15.99,
                     image: '🍕'
                 },
                 {
                     id: 'pizza-4',
-                    name: 'BBQ Chicken',
-                    description: 'BBQ sauce, mozzarella, grilled chicken, and red onions',
+                    name: 'Барбекю с курицей',
+                    description: 'Соус барбекю, моцарелла, курица гриль и красный лук',
                     price: 16.99,
                     image: '🍕'
                 },
                 {
                     id: 'pizza-5',
-                    name: 'Vegetarian',
-                    description: 'Tomato sauce, mozzarella, bell peppers, mushrooms, and olives',
+                    name: 'Вегетарианская',
+                    description: 'Томатный соус, моцарелла, болгарский перец, грибы и оливки',
                     price: 14.99,
                     image: '🍕'
                 },
                 {
                     id: 'pizza-6',
-                    name: 'Supreme',
-                    description: 'Tomato sauce, mozzarella, pepperoni, sausage, peppers, and onions',
+                    name: 'Супреме',
+                    description: 'Томатный соус, моцарелла, пепперони, колбаса, перец и лук',
                     price: 17.99,
                     image: '🍕'
                 }
@@ -545,29 +545,29 @@
             burgers: [
                 {
                     id: 'burger-1',
-                    name: 'Classic Burger',
-                    description: 'Beef patty, lettuce, tomato, onion, and special sauce',
+                    name: 'Классический бургер',
+                    description: 'Говяжья котлета, салат, помидор, лук и фирменный соус',
                     price: 9.99,
                     image: '🍔'
                 },
                 {
                     id: 'burger-2',
-                    name: 'Cheeseburger',
-                    description: 'Beef patty, cheese, lettuce, tomato, and pickles',
+                    name: 'Чизбургер',
+                    description: 'Говяжья котлета, сыр, салат, помидор и маринованные огурцы',
                     price: 10.99,
                     image: '🍔'
                 },
                 {
                     id: 'burger-3',
-                    name: 'Bacon Burger',
-                    description: 'Beef patty, crispy bacon, cheese, lettuce, and mayo',
+                    name: 'Бургер с беконом',
+                    description: 'Говяжья котлета, хрустящий бекон, сыр, салат и майонез',
                     price: 12.99,
                     image: '🍔'
                 },
                 {
                     id: 'burger-4',
-                    name: 'Veggie Burger',
-                    description: 'Plant-based patty, lettuce, tomato, and avocado',
+                    name: 'Вегетарианский бургер',
+                    description: 'Растительная котлета, салат, помидор и авокадо',
                     price: 11.99,
                     image: '🍔'
                 }
@@ -575,29 +575,29 @@
             drinks: [
                 {
                     id: 'drink-1',
-                    name: 'Cola',
-                    description: 'Refreshing cola drink',
+                    name: 'Кола',
+                    description: 'Освежающий напиток кола',
                     price: 2.99,
                     image: '🥤'
                 },
                 {
                     id: 'drink-2',
-                    name: 'Lemonade',
-                    description: 'Fresh squeezed lemonade',
+                    name: 'Лимонад',
+                    description: 'Свежевыжатый лимонад',
                     price: 3.49,
                     image: '🥤'
                 },
                 {
                     id: 'drink-3',
-                    name: 'Iced Tea',
-                    description: 'Sweet iced tea',
+                    name: 'Холодный чай',
+                    description: 'Сладкий холодный чай',
                     price: 2.99,
                     image: '🥤'
                 },
                 {
                     id: 'drink-4',
-                    name: 'Orange Juice',
-                    description: 'Fresh orange juice',
+                    name: 'Апельсиновый сок',
+                    description: 'Свежевыжатый апельсиновый сок',
                     price: 3.99,
                     image: '🥤'
                 }
@@ -660,8 +660,8 @@
                         <p class="menu-card-description">${item.description}</p>
                         <div class="menu-card-footer">
                             <span class="menu-card-price">$${item.price.toFixed(2)}</span>
-                            <button class="add-button" data-item-id="${item.id}" aria-label="Add ${item.name} to cart">
-                                Add
+                            <button class="add-button" data-item-id="${item.id}" aria-label="Добавить ${item.name} в корзину">
+                                Добавить
                             </button>
                         </div>
                     </div>
@@ -734,7 +734,7 @@
          */
         function renderCart() {
             if (cart.length === 0) {
-                cartContent.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                cartContent.innerHTML = '<div class="empty-cart">Ваша корзина пуста</div>';
                 return;
             }
 
@@ -747,12 +747,12 @@
                         <div class="cart-item-info">
                             <div class="cart-item-name">${item.name}</div>
                             <div class="cart-item-price">$${total.toFixed(2)}</div>
-                            <div class="cart-item-quantity">Qty: ${quantity} × $${item.price.toFixed(2)}</div>
+                            <div class="cart-item-quantity">Кол-во: ${quantity} × $${item.price.toFixed(2)}</div>
                         </div>
                         <div>
-                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity - 1})" aria-label="Decrease quantity">−</button>
+                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity - 1})" aria-label="Уменьшить количество">−</button>
                             <span style="margin: 0 0.5rem; font-weight: 600;">${quantity}</span>
-                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity + 1})" aria-label="Increase quantity">+</button>
+                            <button class="add-button" onclick="updateCartQuantity('${item.id}', ${quantity + 1})" aria-label="Увеличить количество">+</button>
                         </div>
                     </div>
                 `;
@@ -807,12 +807,12 @@
         // TODO: Connect to order submission endpoint
         checkoutButton.addEventListener('click', () => {
             if (cart.length === 0) {
-                alert('Your cart is empty');
+                alert('Ваша корзина пуста');
                 return;
             }
             
             // Placeholder for checkout functionality
-            alert(`Order total: $${cartTotal.textContent.replace('$', '')}\n\nTODO: Connect to payment/order submission API`);
+            alert(`Сумма заказа: $${cartTotal.textContent.replace('$', '')}\n\nTODO: Connect to payment/order submission API`);
         });
 
         // Keyboard navigation for accessibility
